@@ -63,16 +63,16 @@ router.delete("/:id", async (req, res) => {
 
 router.put("/:id", async(req, res) => {
     const products=await readFile()
-    const product =products.find(x=>x._id===req.params.id)
+    const product =products.find(x=>x._id === req.params.id)
     if(product){
         delete req.body._id
         delete req.body.createdAt
-        req.body.updatedAt=new Date()
+        req.body.updateAt=new Date()
         const updatedVersion=Object.assign(product,req.body)
         const index =products.indexOf(product)
         products[index]=updatedVersion
         await fs.writeFile(filePath,JSON.stringify(updatedVersion))
-        res.send(updatedVersion)
+         res.send(updatedVersion)
     }
     else
     res.status(404).send("Not Found")
