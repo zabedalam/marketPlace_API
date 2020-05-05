@@ -3,6 +3,7 @@ const fs = require("fs-extra");
 const path = require("path"); //from nodejs
 const uuid = require("uuid/v4");
 const multer = require("multer");
+const { check, validationResult, sanitizeBody } = require("express-validator")
 const router = express.Router();
 const filePath = path.join(__dirname, "../data/products.json");
 
@@ -31,6 +32,17 @@ router.get("/", async (req, res) => {
     res.send(error);
   }
 });
+
+// ?category
+router.get("/",async(req,res)=>{
+  const products=await readFile()
+  if(req.query.category)
+  res.send(products.filter(product=>product.category===req.query.category))
+  else
+  res.send(products)
+
+
+})
 
 router.get("/:id", async (req, res) => {
   //   try{
@@ -74,7 +86,14 @@ router.post(
   }
 );
 
-router.post("/", async (req, res) => {
+router.post("/",[check("name").isLength({ min: 4 }).withMessage("Name should have at least 4 chars"),
+check("category").exists().withMessage("Category is missing"),
+check("description").isLength({ min: 50, max: 1000}).withMessage("Description must be between 50 and 1000 chars"),
+check("price").isNumeric().withMessage("Must be a number"),
+sanitizeBody("price").toFloat()] , async (req, res) => {
+  const errors = validationResult(req)
+    if (!errors.isEmpty())
+        return res.status(404).send(errors)
   //   res.send(req.body)
   const addProd = {
     ...req.body,
