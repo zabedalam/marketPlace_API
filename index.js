@@ -3,14 +3,11 @@ const productsRoutes=require("./src/products")
 const reviewsRoutes=require("./src/reviews")
 const path = require("path")
 
-
 const server=express()//express instances
-
 server.use(express.json())//post method need it for parsing json data
 
 // make the content of the images folder available for "download" under the name of /images
 server.use("/images", express.static(path.join(__dirname, "images")))
-
 server.use("/products",productsRoutes)
 server.use("/reviews",reviewsRoutes)
 // server.get("/",(req,res)=>{
