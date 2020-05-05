@@ -4,7 +4,7 @@ const reviewsRoutes=require("./src/reviews")
 const path = require("path")
 
 const server=express()//express instances
-server.use(express.json())//post method need it for parsing json data
+server.use(express.json())//post method need it for parsing json data it act as a middleware
 
 // make the content of the images folder available for "download" under the name of /images
 server.use("/images", express.static(path.join(__dirname, "images")))
